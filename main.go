@@ -12,21 +12,49 @@ var (
 	ErrTruckNotFound  = errors.New("truck not found")
 )
 
-type Truck struct {
-	id string
+// Blueprint to define methods.
+type Truck interface {
+	LoadCargo() error
+	UnloadCargo() error
 }
 
-func (t *Truck) LoadCargo() error {
+type NormalTruck struct {
+	id    string
+	cargo int
+}
+
+func (t *NormalTruck) LoadCargo() error {
+	t.cargo += 1
 	return nil
 }
 
-func (t *Truck) UnloadCargo() error {
+func (t *NormalTruck) UnloadCargo() error {
+	t.cargo = 0
+	return nil
+}
+
+type ElectricTruck struct {
+	id      string
+	cargo   int
+	battery float64
+}
+
+// Implement interfaces.
+func (e *ElectricTruck) LoadCargo() error {
+	e.cargo += 1
+	e.battery -= 1
+	return nil
+}
+
+func (e *ElectricTruck) UnloadCargo() error {
+	e.cargo = 0
+	e.battery -= 1
 	return nil
 }
 
 // processTruck handles the loading and unloading of a truck.
 func processTruck(truck Truck) error {
-	fmt.Printf("Processing truck: %s\n", truck.id)
+	fmt.Printf("Processing truck %+v\n", truck)
 
 	if err := truck.LoadCargo(); err != nil {
 		// Context for debugging. Alternative to 'new()'.
@@ -42,18 +70,21 @@ func processTruck(truck Truck) error {
 }
 
 func main() {
-	trucks := []Truck{
-		{id: "Truck-1"},
-		{id: "Truck-2"},
-		{id: "Truck-3"},
+	nt := &NormalTruck{id: "1"}
+	et := &ElectricTruck{id: "2"}
+
+	err := processTruck(nt)
+	if err != nil {
+		// Kill the program.
+		log.Fatalf("Error processing truck: %s", err)
 	}
 
-	for _, truck := range trucks {
-		fmt.Printf("Truck %s arrived.\n", truck.id)
-
-		if err := processTruck(truck); err != nil {
-			// Kill the program.
-			log.Fatalf("Error processing truck: %s", err)
-		}
+	err = processTruck(et)
+	if err != nil {
+		// Kill the program.
+		log.Fatalf("Error processing truck: %s", err)
 	}
+
+	log.Println(nt.cargo)
+	log.Println(et.battery)
 }
