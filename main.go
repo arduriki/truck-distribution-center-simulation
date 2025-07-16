@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 )
 
 // Create your own error messages.
@@ -70,21 +69,4 @@ func processTruck(truck Truck) error {
 }
 
 func main() {
-	nt := &NormalTruck{id: "1"}
-	et := &ElectricTruck{id: "2"}
-
-	err := processTruck(nt)
-	if err != nil {
-		// Kill the program.
-		log.Fatalf("Error processing truck: %s", err)
-	}
-
-	err = processTruck(et)
-	if err != nil {
-		// Kill the program.
-		log.Fatalf("Error processing truck: %s", err)
-	}
-
-	log.Println(nt.cargo)
-	log.Println(et.battery)
 }
