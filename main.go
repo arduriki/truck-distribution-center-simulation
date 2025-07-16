@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 )
 
 // Create your own error messages.
@@ -69,4 +70,12 @@ func processTruck(truck Truck) error {
 }
 
 func main() {
+	t := NormalTruck{cargo: 0}
+	log.Printf("Address of t: %p\n", &t)
+	fillTruckCargo(&t)
+}
+
+func fillTruckCargo(t *NormalTruck) {
+	t.cargo = 100
+	log.Printf("Address of t: %p\n", t)
 }
